@@ -107,5 +107,6 @@
     "runtimes": {
       "node": ">=18"
     }
-  }
+  },
+  "icon": "icon.png"
 }
