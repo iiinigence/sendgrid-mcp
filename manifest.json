@@ -1,29 +1,37 @@
 {
   "manifest_version": "0.3",
   "name": "iiinie-sendgrid",
-  "display_name": "SendGrid by iiinie",
+  "display_name": "SendGrid by IIInigence",
   "version": "0.1.0",
-  "description": "Send emails, run campaigns, manage contacts, and read stats through SendGrid — by just asking Claude.",
-  "long_description": "Open-source SendGrid connector by iiinie (https://iiinie.com). Gives Claude 9 tools: send transactional email, create and send Single Send campaigns to your marketing lists, manage contacts and lists, look up verified senders, and read email + campaign statistics. Includes a read-only mode so you can connect safely before enabling sending. You need a SendGrid API key (Settings → API Keys → Restricted Access: Mail Send, Marketing, Template Engine read, Stats read) and a verified sender address.",
+  "description": "Send emails, run campaigns, manage contacts, and read stats through SendGrid \u2014 by just asking Claude.",
+  "long_description": "Open-source SendGrid connector by IIInigence (https://iiinigence.com). Gives Claude 9 tools: send transactional email, create and send Single Send campaigns to your marketing lists, manage contacts and lists, look up verified senders, and read email + campaign statistics. Includes a read-only mode so you can connect safely before enabling sending. You need a SendGrid API key (Settings \u2192 API Keys \u2192 Restricted Access: Mail Send, Marketing, Template Engine read, Stats read) and a verified sender address.",
   "author": {
-    "name": "iiinie",
+    "name": "IIInigence",
     "email": "jude@iiinigence.com",
-    "url": "https://iiinie.com"
+    "url": "https://iiinigence.com"
   },
-  "homepage": "https://iiinie.com",
+  "homepage": "https://iiinigence.com",
   "documentation": "https://github.com/iiinigence/sendgrid-mcp",
   "repository": {
     "type": "git",
     "url": "https://github.com/iiinigence/sendgrid-mcp"
   },
   "license": "MIT",
-  "keywords": ["sendgrid", "email", "marketing", "campaigns", "iiinie"],
+  "keywords": [
+    "sendgrid",
+    "email",
+    "marketing",
+    "campaigns",
+    "iiinie"
+  ],
   "server": {
     "type": "node",
     "entry_point": "dist/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/dist/index.js"],
+      "args": [
+        "${__dirname}/dist/index.js"
+      ],
       "env": {
         "SENDGRID_API_KEY": "${user_config.sendgrid_api_key}",
         "SENDGRID_FROM_EMAIL": "${user_config.from_email}",
@@ -32,28 +40,55 @@
     }
   },
   "tools": [
-    { "name": "send_email", "description": "Send a transactional email to one or more recipients" },
-    { "name": "send_campaign_to_list", "description": "Create and send a campaign to marketing lists" },
-    { "name": "list_campaigns", "description": "List recent campaigns and their status" },
-    { "name": "list_contact_lists", "description": "List marketing lists with contact counts" },
-    { "name": "list_contacts_in_list", "description": "List contacts in a list, with names and custom fields" },
-    { "name": "add_contact", "description": "Add or update a contact, optionally assigning lists" },
-    { "name": "list_senders", "description": "List verified and marketing senders" },
-    { "name": "get_email_stats", "description": "Global email stats by day" },
-    { "name": "get_campaign_stats", "description": "Per-campaign performance stats" }
+    {
+      "name": "send_email",
+      "description": "Send a transactional email to one or more recipients"
+    },
+    {
+      "name": "send_campaign_to_list",
+      "description": "Create and send a campaign to marketing lists"
+    },
+    {
+      "name": "list_campaigns",
+      "description": "List recent campaigns and their status"
+    },
+    {
+      "name": "list_contact_lists",
+      "description": "List marketing lists with contact counts"
+    },
+    {
+      "name": "list_contacts_in_list",
+      "description": "List contacts in a list, with names and custom fields"
+    },
+    {
+      "name": "add_contact",
+      "description": "Add or update a contact, optionally assigning lists"
+    },
+    {
+      "name": "list_senders",
+      "description": "List verified and marketing senders"
+    },
+    {
+      "name": "get_email_stats",
+      "description": "Global email stats by day"
+    },
+    {
+      "name": "get_campaign_stats",
+      "description": "Per-campaign performance stats"
+    }
   ],
   "user_config": {
     "sendgrid_api_key": {
       "type": "string",
       "title": "SendGrid API Key",
-      "description": "Create at SendGrid → Settings → API Keys. Use Restricted Access: Mail Send (Full), Marketing (Full), Template Engine (Read), Stats (Read).",
+      "description": "Create at SendGrid \u2192 Settings \u2192 API Keys. Use Restricted Access: Mail Send (Full), Marketing (Full), Template Engine (Read), Stats (Read).",
       "sensitive": true,
       "required": true
     },
     "from_email": {
       "type": "string",
       "title": "From email (verified sender)",
-      "description": "The email address you send from. Must be verified in SendGrid (Settings → Sender Authentication).",
+      "description": "The email address you send from. Must be verified in SendGrid (Settings \u2192 Sender Authentication).",
       "required": true
     },
     "read_only": {
@@ -64,7 +99,11 @@
     }
   },
   "compatibility": {
-    "platforms": ["darwin", "win32", "linux"],
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
     "runtimes": {
       "node": ">=18"
     }

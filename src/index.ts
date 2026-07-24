@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * @iiinie/sendgrid-mcp — open-source SendGrid MCP server by iiinie (https://iiinie.com)
+ * @iiinie/sendgrid-mcp — open-source SendGrid MCP server by IIInigence (https://iiinigence.com)
  *
  * Lets Claude (and any MCP client) send emails, run list campaigns, manage
  * contacts, and read stats through the SendGrid v3 API.
@@ -360,7 +360,7 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error(
-    `iiinie SendGrid MCP server running (read-only: ${isReadOnly()}). https://iiinie.com`
+    `IIInigence SendGrid MCP server running (read-only: ${isReadOnly()}). https://iiinigence.com`
   );
 }
 

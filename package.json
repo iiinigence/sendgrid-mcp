@@ -1,21 +1,34 @@
 {
   "name": "@iiinie/sendgrid-mcp",
   "version": "0.1.0",
-  "description": "Open-source SendGrid MCP server by iiinie — let Claude and other AI assistants send emails, run campaigns, manage contacts, and read stats via SendGrid.",
+  "description": "Open-source SendGrid MCP server by iiinie \u2014 let Claude and other AI assistants send emails, run campaigns, manage contacts, and read stats via SendGrid.",
   "license": "MIT",
-  "author": "iiinie (https://iiinie.com)",
-  "homepage": "https://iiinie.com",
+  "author": "IIInigence (https://iiinigence.com)",
+  "homepage": "https://iiinigence.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/iiinigence/sendgrid-mcp.git"
   },
-  "keywords": ["mcp", "modelcontextprotocol", "sendgrid", "email", "claude", "ai", "automation", "iiinie"],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "sendgrid",
+    "email",
+    "claude",
+    "ai",
+    "automation",
+    "iiinie"
+  ],
   "type": "module",
   "bin": {
     "iiinie-sendgrid-mcp": "dist/index.js"
   },
   "main": "dist/index.js",
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=18"
   },
