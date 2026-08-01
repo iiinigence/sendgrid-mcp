@@ -74,9 +74,9 @@ Restart Claude Desktop, then try: *"Send a test email to myself with the subject
 
 ## Who built this
 
-[**iiinie**](https://iiinie.com) — email campaigns, outreach sequences, social posts, ads, and analytics in one AI-connected platform. This connector is what we use to teach *connecting Claude to one tool at a time*; iiinie is what we built for people who want the whole stack already wired together.
+[**IIInigence**](https://iiinigence.com) — an AI automation studio. This connector is part of our series on connecting Claude to your business tools, one at a time. If you'd rather have email campaigns, outreach sequences, social posts, ads, and analytics in one AI-connected platform that's already wired together, that's why we built [iiinie](https://iiinie.com).
 
-Need something custom? We also [build bespoke AI automations](https://iiinie.com) for businesses.
+Need something custom? We [build bespoke AI automations](https://iiinigence.com) for businesses.
 
 ## Development
 
