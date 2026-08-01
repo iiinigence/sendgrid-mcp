@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.10",
+  version: "0.1.11",
 });
 
 type ToolResult = {
@@ -97,7 +97,7 @@ function withSignature(html?: string, text?: string, include = true): { html?: s
 
 function signatureNote(): string {
   return signatureHtml()
-    ? "IMPORTANT: the user's branded signature is appended automatically to every email by this server. NEVER write a sign-off, closing line, or signature in the email body (no 'Best,', 'Talk soon,', names, or team names) — end the body after the final content paragraph. "
+    ? "SIGNATURE BEHAVIOR: the user's saved branded signature is appended automatically by default, so do not write a sign-off or closing line in the body — end after the final content paragraph. EXCEPTION: if the user asks for a custom sign-off, a different closing, or no signature, honor that — write the closing they want and set include_signature to false so the saved signature is not appended. "
     : "";
 }
 
@@ -304,6 +304,10 @@ server.registerTool(
         .string()
         .optional()
         .describe('ISO-8601 time to schedule, or omit to send now'),
+      include_signature: z
+        .boolean()
+        .optional()
+        .describe("Set false to skip the saved signature for this campaign (default true)"),
     },
   },
   async ({
@@ -315,6 +319,7 @@ server.registerTool(
     suppression_group_id,
     custom_unsubscribe_url,
     send_at,
+    include_signature,
   }) => {
     const blocked = guardWrite();
     if (blocked) return blocked;
@@ -340,7 +345,7 @@ server.registerTool(
         send_to: { list_ids },
         email_config: {
           subject,
-          html_content: withSignature(html, undefined, true).html ?? html,
+          html_content: withSignature(html, undefined, include_signature !== false).html ?? html,
           sender_id,
           ...(suppression_group_id ? { suppression_group_id } : {}),
           ...(custom_unsubscribe_url ? { custom_unsubscribe_url } : {}),
