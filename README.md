@@ -72,6 +72,10 @@ Restart Claude Desktop, then try: *"Send a test email to myself with the subject
 - Campaign sends require an unsubscribe group or custom unsubscribe URL (CAN-SPAM/GDPR compliance) — the tool enforces this.
 - Free SendGrid tier caps at 100 emails/day.
 
+## Privacy
+
+This connector runs locally, collects **no data**, has no telemetry, and talks only to SendGrid's API. Your API key is stored on your device by Claude Desktop and sent only to SendGrid. Full policy: [PRIVACY.md](./PRIVACY.md).
+
 ## Who built this
 
 [**IIInigence**](https://iiinigence.com) — an AI automation studio. This connector is part of our series on connecting Claude to your business tools, one at a time. If you'd rather have email campaigns, outreach sequences, social posts, ads, and analytics in one AI-connected platform that's already wired together, that's why we built [iiinie](https://iiinie.com).

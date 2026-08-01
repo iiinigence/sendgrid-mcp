@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.2",
+  version: "0.1.3",
 });
 
 type ToolResult = {
@@ -91,6 +91,7 @@ function signatureNote(): string {
 server.registerTool(
   "list_senders",
   {
+    annotations: { title: "List senders", readOnlyHint: true, openWorldHint: true },
     description:
       "List verified senders (for transactional email) and marketing senders (needed as sender_id for campaigns). " +
       "Run this first if a send fails with a sender/from error.",
@@ -116,6 +117,7 @@ server.registerTool(
 server.registerTool(
   "send_email",
   {
+    annotations: { title: "Send email", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     description:
       "Send a transactional email via SendGrid to one or more recipients. " +
       "ALWAYS show the user a preview of subject and body and get their approval before calling this tool. " +
@@ -178,6 +180,7 @@ server.registerTool(
 server.registerTool(
   "list_contact_lists",
   {
+    annotations: { title: "List contact lists", readOnlyHint: true, openWorldHint: true },
     description: "List all SendGrid marketing contact lists with their IDs and contact counts.",
     inputSchema: {},
   },
@@ -193,6 +196,7 @@ server.registerTool(
 server.registerTool(
   "list_contacts_in_list",
   {
+    annotations: { title: "List contacts in a list", readOnlyHint: true, openWorldHint: true },
     description:
       "List the contacts in a specific marketing list (by list ID from list_contact_lists). " +
       "Returns emails plus first/last name and custom fields — useful for personalized sends.",
@@ -215,6 +219,7 @@ server.registerTool(
 server.registerTool(
   "add_contact",
   {
+    annotations: { title: "Add or update contact", readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     description:
       "Add or update (upsert by email) a contact in SendGrid marketing contacts, optionally assigning to lists. " +
       "Note: SendGrid processes contact upserts asynchronously — the contact can take a minute to appear.",
@@ -258,6 +263,7 @@ server.registerTool(
 server.registerTool(
   "send_campaign_to_list",
   {
+    annotations: { title: "Send campaign to list", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     description:
       "Create AND send a Single Send campaign to one or more marketing lists, immediately or scheduled. " + signatureNote() +
       "ALWAYS show the user the subject and body and get explicit approval before calling this. " +
@@ -330,6 +336,7 @@ server.registerTool(
 server.registerTool(
   "list_campaigns",
   {
+    annotations: { title: "List campaigns", readOnlyHint: true, openWorldHint: true },
     description: "List recent Single Send campaigns with their IDs and status.",
     inputSchema: {},
   },
@@ -349,6 +356,7 @@ server.registerTool(
 server.registerTool(
   "get_email_stats",
   {
+    annotations: { title: "Get email stats", readOnlyHint: true, openWorldHint: true },
     description:
       "Get global email stats (requests, delivered, opens, clicks, bounces, spam reports) for a date range, aggregated by day.",
     inputSchema: {
@@ -370,6 +378,7 @@ server.registerTool(
 server.registerTool(
   "get_campaign_stats",
   {
+    annotations: { title: "Get campaign stats", readOnlyHint: true, openWorldHint: true },
     description:
       "Get stats for Single Send campaigns (delivered, opens, clicks, bounces, unsubscribes). " +
       "Pass a singlesend_id from list_campaigns, or omit it for stats across all campaigns.",
