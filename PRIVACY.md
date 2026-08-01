@@ -27,4 +27,4 @@ Use of SendGrid is governed by [Twilio's privacy policy](https://www.twilio.com/
 
 Questions: dev@iiinigence.com · https://iiinigence.com
 
-*This is an independent, unofficial project. Not affiliated with or endorsed by Twilio Inc.*
+*This is an independent project. Not affiliated with or endorsed by Twilio Inc.*

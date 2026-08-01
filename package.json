@@ -1,7 +1,7 @@
 {
   "name": "@iiinigence/sendgrid-mcp",
-  "version": "0.1.6",
-  "description": "Unofficial open-source SendGrid MCP server by IIInigence \u2014 let Claude and other AI assistants send emails, run campaigns, manage contacts, and read stats via SendGrid.",
+  "version": "0.1.7",
+  "description": "Open-source SendGrid MCP server by IIInigence \u2014 let Claude and other AI assistants send emails, run campaigns, manage contacts, and read stats via SendGrid.",
   "license": "MIT",
   "author": "IIInigence (https://iiinigence.com)",
   "homepage": "https://iiinigence.com",
