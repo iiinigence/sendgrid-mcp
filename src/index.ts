@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.9",
+  version: "0.1.10",
 });
 
 type ToolResult = {
@@ -60,13 +60,29 @@ function signatureHtml(): string {
 }
 
 function signatureText(): string {
-  // crude but effective plain-text rendering of the signature
+  // plain-text rendering of the signature: strip tags, decode common entities
   return signatureHtml()
     .replace(/<br\s*\/?>(?=.)/gi, "\n")
     .replace(/<\/(p|div|tr)>/gi, "\n")
     .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/[ \t]{2,}/g, " ")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+/** Minimal HTML rendering of a plain-text body so HTML signatures render everywhere. */
+function htmlFromText(text: string): string {
+  const esc = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return `<div style="font-family:inherit;white-space:pre-wrap;">${esc}</div>`;
 }
 
 
@@ -156,7 +172,8 @@ server.registerTool(
       if (!html && !text) {
         return fail(new Error("Provide `html` and/or `text` for the email body."));
       }
-      const signed = withSignature(html, text, include_signature !== false);
+      const htmlBody = html ?? (text && signatureHtml() ? htmlFromText(text) : undefined);
+      const signed = withSignature(htmlBody, text, include_signature !== false);
       const content: Array<{ type: string; value: string }> = [];
       if (signed.text) content.push({ type: "text/plain", value: signed.text });
       if (signed.html) content.push({ type: "text/html", value: signed.html });
