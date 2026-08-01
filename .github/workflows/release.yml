@@ -1,0 +1,35 @@
+name: Build bundle & publish release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Build server
+        run: |
+          npm ci
+          npm run build
+      - name: Assemble bundle
+        run: |
+          mkdir bundle-build
+          cp -r manifest.json icon.png dist package.json package-lock.json README.md LICENSE bundle-build/
+          cd bundle-build
+          npm install --omit=dev
+      - name: Pack .mcpb
+        run: npx --yes @anthropic-ai/mcpb pack bundle-build iiinie-sendgrid.mcpb
+      - name: Publish release with bundle attached
+        uses: softprops/action-gh-release@v2
+        with:
+          files: iiinie-sendgrid.mcpb
+          generate_release_notes: true
