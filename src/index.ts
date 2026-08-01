@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.0",
+  version: "0.1.1",
 });
 
 type ToolResult = {
@@ -52,6 +52,36 @@ function guardWrite(): ToolResult | null {
   return isReadOnly()
     ? { content: [{ type: "text", text: READ_ONLY_MESSAGE }], isError: true }
     : null;
+}
+
+/** Configured HTML signature, appended verbatim to outgoing HTML email. */
+function signatureHtml(): string {
+  return (process.env.SENDGRID_SIGNATURE_HTML ?? "").trim();
+}
+
+function signatureText(): string {
+  // crude but effective plain-text rendering of the signature
+  return signatureHtml()
+    .replace(/<br\s*\/?>(?=.)/gi, "\n")
+    .replace(/<\/(p|div|tr)>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function withSignature(html?: string, text?: string, include = true): { html?: string; text?: string } {
+  const sig = signatureHtml();
+  if (!sig || !include) return { html, text };
+  return {
+    html: html ? `${html}<br><br><!-- signature -->${sig}` : html,
+    text: text ? `${text}\n\n${signatureText()}` : text,
+  };
+}
+
+function signatureNote(): string {
+  return signatureHtml()
+    ? " NOTE: a branded signature is configured and appended automatically to every email — do NOT write a sign-off or signature in the body."
+    : "";
 }
 
 /* ------------------------------------------------------------------ */
@@ -89,7 +119,7 @@ server.registerTool(
     description:
       "Send a transactional email via SendGrid to one or more recipients. " +
       "ALWAYS show the user a preview of subject and body and get their approval before calling this tool. " +
-      "The from address must be a verified sender (defaults to SENDGRID_FROM_EMAIL).",
+      "The from address must be a verified sender (defaults to SENDGRID_FROM_EMAIL)." + signatureNote(),
     inputSchema: {
       to: z.array(z.string()).min(1).describe("Recipient email addresses"),
       subject: z.string().describe("Email subject line"),
@@ -101,9 +131,13 @@ server.registerTool(
         .describe("Verified sender address; defaults to SENDGRID_FROM_EMAIL"),
       from_name: z.string().optional().describe("Sender display name"),
       reply_to: z.string().optional().describe("Reply-to address"),
+      include_signature: z
+        .boolean()
+        .optional()
+        .describe("Set false to skip the configured signature for this email (default true)"),
     },
   },
-  async ({ to, subject, html, text, from, from_name, reply_to }) => {
+  async ({ to, subject, html, text, from, from_name, reply_to, include_signature }) => {
     const blocked = guardWrite();
     if (blocked) return blocked;
     try {
@@ -118,9 +152,10 @@ server.registerTool(
       if (!html && !text) {
         return fail(new Error("Provide `html` and/or `text` for the email body."));
       }
+      const signed = withSignature(html, text, include_signature !== false);
       const content: Array<{ type: string; value: string }> = [];
-      if (text) content.push({ type: "text/plain", value: text });
-      if (html) content.push({ type: "text/html", value: html });
+      if (signed.text) content.push({ type: "text/plain", value: signed.text });
+      if (signed.html) content.push({ type: "text/html", value: signed.html });
 
       await sg("POST", "/v3/mail/send", {
         personalizations: [{ to: to.map((email) => ({ email })) }],
@@ -224,7 +259,7 @@ server.registerTool(
   "send_campaign_to_list",
   {
     description:
-      "Create AND send a Single Send campaign to one or more marketing lists, immediately or scheduled. " +
+      "Create AND send a Single Send campaign to one or more marketing lists, immediately or scheduled. " + signatureNote() +
       "ALWAYS show the user the subject and body and get explicit approval before calling this. " +
       "Requires a marketing sender_id (from list_senders) and, for compliance, either an unsubscribe " +
       "group (suppression_group_id) or a custom_unsubscribe_url.",
@@ -270,7 +305,7 @@ server.registerTool(
         send_to: { list_ids },
         email_config: {
           subject,
-          html_content: html,
+          html_content: withSignature(html, undefined, true).html ?? html,
           sender_id,
           ...(suppression_group_id ? { suppression_group_id } : {}),
           ...(custom_unsubscribe_url ? { custom_unsubscribe_url } : {}),

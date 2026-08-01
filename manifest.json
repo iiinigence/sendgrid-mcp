@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "iiinie-sendgrid",
   "display_name": "SendGrid by IIInigence",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Send emails, run campaigns, manage contacts, and read stats through SendGrid \u2014 by just asking Claude.",
   "long_description": "Open-source SendGrid connector by IIInigence (https://iiinigence.com). Gives Claude 9 tools: send transactional email, create and send Single Send campaigns to your marketing lists, manage contacts and lists, look up verified senders, and read email + campaign statistics. Includes a read-only mode so you can connect safely before enabling sending. You need a SendGrid API key (Settings \u2192 API Keys \u2192 Restricted Access: Mail Send, Marketing, Template Engine read, Stats read) and a verified sender address.",
   "author": {
@@ -35,7 +35,8 @@
       "env": {
         "SENDGRID_API_KEY": "${user_config.sendgrid_api_key}",
         "SENDGRID_FROM_EMAIL": "${user_config.from_email}",
-        "READ_ONLY": "${user_config.read_only}"
+        "READ_ONLY": "${user_config.read_only}",
+        "SENDGRID_SIGNATURE_HTML": "${user_config.signature_html}"
       }
     }
   },
@@ -96,6 +97,12 @@
       "title": "Read-only mode",
       "description": "When on, Claude can read stats, lists, and contacts but cannot send emails or make changes. Turn off when you're ready to let Claude send.",
       "default": false
+    },
+    "signature_html": {
+      "type": "string",
+      "title": "Email signature (HTML, optional)",
+      "description": "Pasted as-is at the end of every HTML email Claude sends \u2014 supports full HTML: links, styling, a hosted logo <img>. Leave empty for no signature.",
+      "required": false
     }
   },
   "compatibility": {
