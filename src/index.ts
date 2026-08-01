@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.8",
+  version: "0.1.9",
 });
 
 type ToolResult = {

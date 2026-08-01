@@ -2,9 +2,9 @@
   "manifest_version": "0.3",
   "name": "iiinie-sendgrid",
   "display_name": "SendGrid Connector",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Send emails, run campaigns, manage contacts, and read stats through SendGrid \u2014 by just asking Claude.",
-  "long_description": "Open-source SendGrid connector by IIInigence (https://iiinigence.com). Gives Claude 9 tools: send transactional email, create and send Single Send campaigns to your marketing lists, manage contacts and lists, look up verified senders, and read email + campaign statistics. Includes a read-only mode so you can connect safely before enabling sending. You need a SendGrid API key (Settings \u2192 API Keys \u2192 Restricted Access: Mail Send, Marketing, Template Engine read, Stats read) and a verified sender address.",
+  "long_description": "Open-source SendGrid connector by IIInigence (https://iiinigence.com). Gives Claude 10 tools: send transactional email, create and send Single Send campaigns to your marketing lists, manage contacts and lists, look up verified senders, and read email + campaign statistics. Includes a read-only mode so you can connect safely before enabling sending. You need a SendGrid API key (Settings \u2192 API Keys \u2192 Restricted Access: Mail Send, Marketing, Template Engine read, Stats read) and a verified sender address.",
   "author": {
     "name": "IIInigence",
     "email": "dev@iiinigence.com",
