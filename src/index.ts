@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.3",
+  version: "0.1.4",
 });
 
 type ToolResult = {
@@ -80,7 +80,7 @@ function withSignature(html?: string, text?: string, include = true): { html?: s
 
 function signatureNote(): string {
   return signatureHtml()
-    ? " NOTE: a branded signature is configured and appended automatically to every email — do NOT write a sign-off or signature in the body."
+    ? "IMPORTANT: the user's branded signature is appended automatically to every email by this server. NEVER write a sign-off, closing line, or signature in the email body (no 'Best,', 'Talk soon,', names, or team names) — end the body after the final content paragraph. "
     : "";
 }
 
@@ -119,9 +119,10 @@ server.registerTool(
   {
     annotations: { title: "Send email", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     description:
+      signatureNote() +
       "Send a transactional email via SendGrid to one or more recipients. " +
       "ALWAYS show the user a preview of subject and body and get their approval before calling this tool. " +
-      "The from address must be a verified sender (defaults to SENDGRID_FROM_EMAIL)." + signatureNote(),
+      "The from address must be a verified sender (defaults to SENDGRID_FROM_EMAIL).",
     inputSchema: {
       to: z.array(z.string()).min(1).describe("Recipient email addresses"),
       subject: z.string().describe("Email subject line"),
@@ -265,10 +266,11 @@ server.registerTool(
   {
     annotations: { title: "Send campaign to list", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     description:
-      "Create AND send a Single Send campaign to one or more marketing lists, immediately or scheduled. " + signatureNote() +
+      signatureNote() +
+      "Create AND send a Single Send campaign to one or more marketing lists, immediately or scheduled. " +
       "ALWAYS show the user the subject and body and get explicit approval before calling this. " +
-      "Requires a marketing sender_id (from list_senders) and, for compliance, either an unsubscribe " +
-      "group (suppression_group_id) or a custom_unsubscribe_url.",
+      "Requires a marketing sender_id (from list_senders). The unsubscribe group is handled automatically " +
+      "(the account default is used) — only pass suppression_group_id or custom_unsubscribe_url to override.",
     inputSchema: {
       name: z.string().describe("Internal campaign name, e.g. 'July newsletter'"),
       list_ids: z.array(z.string()).min(1).describe("Marketing list IDs to send to"),
@@ -278,7 +280,7 @@ server.registerTool(
       suppression_group_id: z
         .number()
         .optional()
-        .describe("Unsubscribe group ID (this or custom_unsubscribe_url is required)"),
+        .describe("Unsubscribe group ID. Usually omit this — the server auto-uses the account's default unsubscribe group."),
       custom_unsubscribe_url: z.string().optional(),
       send_at: z
         .string()
@@ -300,11 +302,20 @@ server.registerTool(
     if (blocked) return blocked;
     try {
       if (!suppression_group_id && !custom_unsubscribe_url) {
-        return fail(
-          new Error(
-            "Compliance requirement: provide suppression_group_id (Settings → Unsubscribe Groups) or custom_unsubscribe_url."
-          )
-        );
+        // Auto-resolve: use the account's default unsubscribe group, or the only one that exists.
+        const groups = (await sg<Array<{ id: number; name: string; is_default: boolean }>>(
+          "GET",
+          "/v3/asm/groups"
+        )) ?? [];
+        const pick = groups.find((g) => g.is_default) ?? (groups.length === 1 ? groups[0] : undefined);
+        if (!pick) {
+          return fail(
+            new Error(
+              "Compliance requirement: no unsubscribe group could be auto-selected. Create one in SendGrid (Settings → Unsubscribe Groups) or pass suppression_group_id / custom_unsubscribe_url. Use list_unsubscribe_groups to see what exists."
+            )
+          );
+        }
+        suppression_group_id = pick.id;
       }
       const created = await sg<{ id: string }>("POST", "/v3/marketing/singlesends", {
         name,
@@ -343,6 +354,24 @@ server.registerTool(
   async () => {
     try {
       return ok(await sg("GET", "/v3/marketing/singlesends?page_size=100"));
+    } catch (e) {
+      return fail(e);
+    }
+  }
+);
+
+server.registerTool(
+  "list_unsubscribe_groups",
+  {
+    annotations: { title: "List unsubscribe groups", readOnlyHint: true, openWorldHint: true },
+    description:
+      "List the account's unsubscribe (suppression) groups with IDs and which one is the default. " +
+      "Campaign sends use the default group automatically when none is specified.",
+    inputSchema: {},
+  },
+  async () => {
+    try {
+      return ok(await sg("GET", "/v3/asm/groups"));
     } catch (e) {
       return fail(e);
     }
