@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "iiinie-sendgrid",
   "display_name": "SendGrid Connector",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Unofficial SendGrid connector \u2014 send emails, run campaigns, manage contacts, and read stats by just asking Claude.",
   "long_description": "Open-source, unofficial SendGrid connector by IIInigence (https://iiinigence.com). Not affiliated with or endorsed by Twilio Inc.; SendGrid is a trademark of Twilio Inc. Gives Claude 9 tools: send transactional email, create and send Single Send campaigns to your marketing lists, manage contacts and lists, look up verified senders, and read email + campaign statistics. Includes a read-only mode so you can connect safely before enabling sending. You need a SendGrid API key (Settings \u2192 API Keys \u2192 Restricted Access: Mail Send, Marketing, Template Engine read, Stats read) and a verified sender address.",
   "author": {
