@@ -89,3 +89,7 @@ SENDGRID_API_KEY=SG.xxx node dist/index.js
 ```
 
 MIT licensed. PRs welcome.
+
+---
+
+*This is an independent, unofficial project by IIInigence. It is not affiliated with, endorsed, or sponsored by Twilio Inc. "SendGrid" is a trademark of Twilio Inc., used here only to describe compatibility.*
