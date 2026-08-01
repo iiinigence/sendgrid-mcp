@@ -19,7 +19,7 @@ import { sg, isReadOnly, READ_ONLY_MESSAGE, SendGridError } from "./sendgrid.js"
 
 const server = new McpServer({
   name: "iiinie-sendgrid",
-  version: "0.1.4",
+  version: "0.1.5",
 });
 
 type ToolResult = {
@@ -69,12 +69,67 @@ function signatureText(): string {
     .trim();
 }
 
+
+/** Closing phrases that indicate a sign-off line (must be the whole line). */
+const SIGNOFF_LINE =
+  /^(best|best regards|best wishes|warm regards|warmly|kind regards|regards|sincerely|cheers|talk soon|thanks|thank you|many thanks|all the best|take care)[\s,!.]*$/i;
+
+/** Remove [Your name]-style placeholders and, when a signature is configured,
+ *  any trailing sign-off block the model wrote despite instructions. */
+function stripSignoff(body: string, isHtml: boolean): string {
+  let out = body.replace(/\[\s*(your|sender|company|team)[^\]]{0,60}\]/gi, "").trimEnd();
+  if (!signatureHtml()) return out;
+  if (isHtml) {
+    for (let i = 0; i < 2; i++) {
+      // trailing <p>…</p> whose first line is a bare closer (anchored to the LAST <p>)
+      const lastP = out.toLowerCase().lastIndexOf("<p");
+      const p = lastP >= 0 ? out.slice(lastP).match(/^<p[^>]*>([\s\S]*?)<\/p>\s*$/i) : null;
+      if (p) {
+        const lines = p[1]
+          .replace(/<br\s*\/?>/gi, "\n")
+          .replace(/<[^>]+>/g, "")
+          .split(/\n+/)
+          .map((l) => l.trim())
+          .filter(Boolean);
+        if (lines.length >= 1 && lines.length <= 3 && SIGNOFF_LINE.test(lines[0]) && lines.slice(1).every((l) => l.length <= 60)) {
+          out = out.slice(0, out.toLowerCase().lastIndexOf("<p")).trimEnd();
+          continue;
+        }
+      }
+      // trailing "<br><br>Warm regards,<br>The Team" without <p> wrapper
+      const b = out.match(/(?:<br\s*\/?>\s*)+([^<>\n]{1,40})(?:<br\s*\/?>\s*([^<>\n]{1,60}))?\s*$/i);
+      if (b && SIGNOFF_LINE.test(b[1].trim())) {
+        out = out.slice(0, b.index).trimEnd();
+        continue;
+      }
+      break;
+    }
+  } else {
+    const lines = out.split("\n");
+    let end = lines.length;
+    while (end > 0 && !lines[end - 1].trim()) end--;
+    // up to 2 short lines under a closer line
+    for (let back = 1; back <= 3; back++) {
+      const idx = end - back;
+      if (idx < 0) break;
+      if (SIGNOFF_LINE.test(lines[idx].trim())) {
+        const tail = lines.slice(idx + 1, end).map((l) => l.trim());
+        if (tail.every((l) => l.length <= 60)) { out = lines.slice(0, idx).join("\n").trimEnd(); }
+        break;
+      }
+    }
+  }
+  return out;
+}
+
 function withSignature(html?: string, text?: string, include = true): { html?: string; text?: string } {
   const sig = signatureHtml();
-  if (!sig || !include) return { html, text };
+  const cleanHtml = html ? stripSignoff(html, true) : html;
+  const cleanText = text ? stripSignoff(text, false) : text;
+  if (!sig || !include) return { html: cleanHtml, text: cleanText };
   return {
-    html: html ? `${html}<br><br><!-- signature -->${sig}` : html,
-    text: text ? `${text}\n\n${signatureText()}` : text,
+    html: cleanHtml ? `${cleanHtml}<br><br><!-- signature -->${sig}` : cleanHtml,
+    text: cleanText ? `${cleanText}\n\n${signatureText()}` : cleanText,
   };
 }
 
