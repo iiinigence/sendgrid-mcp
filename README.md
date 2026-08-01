@@ -1,4 +1,4 @@
-# @iiinie/sendgrid-mcp
+# @iiinigence/sendgrid-mcp
 
 **Send emails, run campaigns, manage contacts, and read stats — by just asking your AI.**
 
@@ -27,7 +27,7 @@ No Node, no config files — Claude Desktop runs the bundle with its built-in ru
   "mcpServers": {
     "sendgrid": {
       "command": "npx",
-      "args": ["-y", "@iiinie/sendgrid-mcp"],
+      "args": ["-y", "@iiinigence/sendgrid-mcp"],
       "env": {
         "SENDGRID_API_KEY": "SG.your_key_here",
         "SENDGRID_FROM_EMAIL": "you@yourdomain.com",

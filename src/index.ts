@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * @iiinie/sendgrid-mcp — open-source SendGrid MCP server by IIInigence (https://iiinigence.com)
+ * @iiinigence/sendgrid-mcp — open-source SendGrid MCP server by IIInigence (https://iiinigence.com)
  *
  * Lets Claude (and any MCP client) send emails, run list campaigns, manage
  * contacts, and read stats through the SendGrid v3 API.
