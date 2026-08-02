@@ -9,7 +9,7 @@ An open-source [MCP](https://modelcontextprotocol.io) server for [SendGrid](http
 ## Easiest install — one file, no terminal (Claude Desktop)
 
 1. Download **`iiinie-sendgrid.mcpb`** from the [latest release](https://github.com/iiinigence/sendgrid-mcp/releases/latest)
-2. Double-click it — Claude Desktop shows what it does; click **Install**. (If your computer asks "select an app to open this file," open Claude Desktop → Settings → Extensions → **Install extension…** and pick the file instead — or drag it onto that settings page.)
+2. In Claude Desktop: **Settings → Extensions → Advanced settings → Install Extension** → pick the downloaded file. Claude shows what you're getting; click **Install**. (Double-clicking the file also works on machines where the file type is associated with Claude Desktop.)
 3. Paste your SendGrid API key and sender email into the settings form. Done.
 
 No Node, no config files — Claude Desktop runs the bundle with its built-in runtime. Nervous about giving an AI send powers? Flip on **Read-only mode** in the same form: Claude can see stats and lists but can't send until you turn it off.
