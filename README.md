@@ -4,7 +4,7 @@
 
 An open-source [MCP](https://modelcontextprotocol.io) server for [SendGrid](https://sendgrid.com), developed by [IIInigence](https://iiinigence.com). Works with Claude Desktop, Claude Code, and any MCP-compatible client.
 
-> 🎥 Watch the full setup tutorial: *How to Connect Claude with SendGrid* — [link]
+> 🎥 Watch the full setup tutorial: [How to Connect Claude with SendGrid — AI Email Campaigns by Just Asking](https://www.youtube.com/watch?v=5IXc_3JtwZ0)
 
 ## Easiest install — one file, no terminal (Claude Desktop)
 
