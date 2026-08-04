@@ -78,9 +78,9 @@ This connector runs locally, collects **no data**, has no telemetry, and talks o
 
 ## Who built this
 
-[**IIInigence**](https://iiinigence.com) — an AI automation studio. This connector is part of our series on connecting Claude to your business tools, one at a time. If you'd rather have email campaigns, outreach sequences, social posts, ads, and analytics in one AI-connected platform that's already wired together, that's why we built [iiinie](https://iiinie.com).
+[**IIInigence**](https://iiinigence.com) — a software development agency: custom software, AI automations, full platforms. This connector is part of our [video series](https://www.youtube.com/@iiinigence) on connecting Claude to your business tools, one at a time.
 
-Need something custom? We [build bespoke AI automations](https://iiinigence.com) for businesses.
+Want something like this built for your business? [Tell us what you'd build](https://get.iiinigence.io/contact).
 
 ## Development
 
